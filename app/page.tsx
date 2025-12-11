@@ -11,142 +11,51 @@ export default function Home() {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const leftContentRef = useRef<HTMLDivElement | null>(null);
   const gradientRef = useRef<HTMLDivElement | null>(null);
+  const heroRef = useRef<HTMLElement | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
   // GSAP / ScrollTrigger animations for hero content & container
   useEffect(() => {
     if (typeof window === 'undefined') return;
     gsap.registerPlugin(ScrollTrigger);
-
-    const cont = containerRef.current;
+    const hero = heroRef.current;
     const content = contentRef.current;
-    const leftEl = leftContentRef.current;
-    const gradEl = gradientRef.current;
-    if (!cont || !content) return;
+    if (!hero || !content || !containerRef.current) return;
 
-    // initial states
-    gsap.set(content, { opacity: 0, y: 40, willChange: 'transform, opacity' });
-    gsap.set(cont, { willChange: 'transform', transformOrigin: 'center center' });
-    if (leftEl) gsap.set(leftEl, { x: -120, opacity: 0, willChange: 'transform, opacity' });
-    if (gradEl) gsap.set(gradEl, { opacity: 1 });
+    const ctx = gsap.context(() => {
+      const lines = gsap.utils.toArray<HTMLElement>('.hero-line');
+      gsap.set(content, { opacity: 1 });
+      gsap.set(lines, { yPercent: 60, opacity: 0, rotateX: -5, transformOrigin: 'left center' });
 
-    const contentTween = gsap.fromTo(
-      content,
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 3.0,           // more slow content reveal
-        ease: 'expo.out',
-        force3D: true,
-        scrollTrigger: {
-          trigger: cont,
-          start: 'top 80%',
-          toggleActions: 'play none none reverse'
-        }
-      }
-    );
+      const introTl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+      introTl.to(lines, { yPercent: 0, opacity: 1, rotateX: 0, duration: 1.35, stagger: 0.15 })
+             .from('.hero-scroll-indicator', { y: 12, opacity: 0, duration: 0.8, ease: 'power3.out' }, '-=0.8');
 
-    // Use matchMedia for breakpoints; desktop reduces width & shows left content, mobile uses subtle scale
-    const mm = gsap.matchMedia();
-
-    mm.add('(min-width: 1024px)', () => {
-      const widthTween = gsap.to(cont, {
-        width: '50%',
+      gsap.to(content, {
+        yPercent: -10,
         ease: 'none',
-        force3D: true,
-        transformOrigin: 'center right',
         scrollTrigger: {
-          trigger: cont,
+          trigger: hero,
           start: 'top top',
           end: 'bottom top',
-          scrub: 2.5,            // even slower scroll tied width change
-          invalidateOnRefresh: true
+          scrub: 1.4
         }
       });
 
-      const gradTween = gradEl ? gsap.to(gradEl, {
-        opacity: 0.5,
+      gsap.to(containerRef.current, {
+        scale: 1.05,
+        yPercent: 4,
         ease: 'none',
-        force3D: true,
         scrollTrigger: {
-          trigger: cont,
+          trigger: hero,
           start: 'top top',
           end: 'bottom top',
-          scrub: 2.5,            // even slower gradient transition
-          invalidateOnRefresh: true
-        }
-      }) : null;
-
-      // slow-motion slide for left content tied to scroll (scrub)
-      const leftTween = leftEl ? gsap.to(leftEl, {
-        x: 0,
-        opacity: 1,
-        ease: 'expo.inOut',
-        force3D: true,
-        scrollTrigger: {
-          trigger: cont,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 2.5,
-          invalidateOnRefresh: true
-        }
-      }) : null;
-
-      return () => {
-        widthTween.kill();
-        gradTween?.kill();
-        leftTween?.kill();
-      };
-    });
-
-    mm.add('(max-width: 1023px)', () => {
-      const mobileScaleTween = gsap.fromTo(cont, { scale: 1.02, y: 6 }, {
-        scale: 1,
-        y: 0,
-        duration: 2.6,          // more slow mobile scale
-        ease: 'expo.out',
-        force3D: true,
-        scrollTrigger: {
-          trigger: cont,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 2.0,            // even slower mobile scrub
-          invalidateOnRefresh: true
+          scrub: 1.2
         }
       });
+    }, hero);
 
-      return () => {
-        mobileScaleTween.kill();
-      };
-    });
-
-    // fallback / common: small scale for all; kept for visual smoothness
-    const scaleTween = gsap.fromTo(
-      cont,
-      { scale: 1.03, y: 6 },
-      {
-        scale: 1,
-        y: 0,
-        duration: 2.4,          // more slow global scale fallback
-        ease: 'power2.out',
-        force3D: true,
-        scrollTrigger: {
-          trigger: cont,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 1.8,            // slower smooth fallback scrub
-          invalidateOnRefresh: true
-        }
-      }
-    );
-
-    return () => {
-      contentTween.kill();
-      scaleTween.kill();
-      mm.revert();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
+    return () => ctx.revert();
   }, []);
 
   // Animate left content on mount when user used previous isScrolled condition
@@ -179,7 +88,10 @@ export default function Home() {
    return (
      <div className="flex flex-col bg-white" style={{ fontFamily: "Verdana, Geneva, sans-serif" }}>
        {/* Hero Section with Video Background - Below Navbar */}
-       <section className="relative w-full overflow-hidden m-0 p-0 pt-20 md:pt-22 bg-white"> {/* reduced top padding to bring video closer to navbar */}
+       <section
+         ref={heroRef}
+         className="relative w-full overflow-hidden m-0 p-0 pt-21 md:pt-25 bg-white"
+       >
          <div className="w-full m-0 p-0 px-4 sm:px-6 lg:px-8">
            <div className={`relative min-h-[70vh] sm:min-h-[80vh] md:min-h-screen flex transition-all duration-700 ease-in-out ${
              isScrolled ? 'flex-col lg:flex-row gap-0' : 'flex-col'
@@ -289,13 +201,12 @@ export default function Home() {
                <div ref={contentRef} className="relative z-10 h-full flex items-center justify-center transition-all duration-700 ease-in-out">
                  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
                    <div className="mx-auto max-w-4xl text-center">
-                     { /* Changed code: larger, centered hero H1 across all states */ }
                      <h1
                        className="font-bold tracking-tight text-white mb-6 transition-all duration-700 leading-tight w-full max-w-full text-5xl sm:text-6xl md:text-7xl lg:text-[5rem] xl:text-[6.5rem] 2xl:text-[8rem] text-center"
                        style={{ fontFamily: "Myriad Pro, 'Segoe UI', Roboto, sans-serif", lineHeight: 0.95 }}
-                       >
-                       <span className="block">Creative Graphic</span>
-                       <span className="block">Desing Center</span>
+                     >
+                       <span className="block hero-line">Creative Graphic</span>
+                       <span className="block hero-line">Desing Center</span>
                      </h1>
                    </div>
                  </div>
