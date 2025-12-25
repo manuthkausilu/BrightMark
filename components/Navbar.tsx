@@ -66,9 +66,9 @@ export default function Navbar() {
                 <Image
                   src="/websiteLogo.png"
                   alt="Bright Mark Logo"
-                  width={200}
-                  height={80}
-                  className="h-16 md:h-24 w-auto object-contain"
+                  width={180}
+                  height={74}
+                  className="h-14 md:h-18 w-auto object-contain"
                   priority
                 />
               </Link>
