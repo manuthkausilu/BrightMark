@@ -215,6 +215,40 @@ export default function Home() {
            </div>
          </div>
        </section>
+
+       {/* Modern CTA (match Services/About sizing) */}
+       <section className="px-4 sm:px-6 lg:px-10 py-14 bg-white">
+         <div className="mx-auto max-w-[110rem]">
+           <div className="relative bg-blue-900 text-white rounded-[2.5rem] sm:rounded-[3rem] md:rounded-[3.5rem] overflow-hidden px-10 sm:px-14 py-14 sm:py-16 md:py-20 shadow-xl ring-1 ring-white/10">
+             <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/20 pointer-events-none" />
+             <div className="relative flex flex-col lg:flex-row items-center justify-between gap-10">
+               <div className="text-center lg:text-left">
+                 <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
+                   Need design or printing today?
+                 </h3>
+                 <p className="mt-3 text-lg sm:text-xl md:text-2xl text-blue-100/90 font-medium max-w-2xl">
+                   Share your requirements (size, quantity, material, finish) and we’ll respond with pricing and timelines.
+                 </p>
+               </div>
+
+               <div className="flex flex-col sm:flex-row gap-4">
+                 <Link
+                   href="/contact"
+                   className="inline-flex items-center justify-center rounded-full bg-white px-10 py-5 text-lg sm:text-xl font-semibold text-blue-900 hover:bg-blue-50 shadow-lg transition-all"
+                 >
+                   Contact us
+                 </Link>
+                 <Link
+                   href="/shop"
+                   className="inline-flex items-center justify-center rounded-full bg-white/10 px-10 py-5 text-lg sm:text-xl font-semibold text-white hover:bg-white/15 ring-1 ring-white/25 transition-all"
+                 >
+                   Browse Shop
+                 </Link>
+               </div>
+             </div>
+           </div>
+         </div>
+       </section>
      </div>
    );
 }

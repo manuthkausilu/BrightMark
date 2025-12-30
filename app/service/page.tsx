@@ -1,128 +1,124 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 export default function Page() {
-  const [query, setQuery] = useState('')
-
-  const categories = [
-    {
-      id: 'graphic',
-      title: '🎨 Graphic Works',
-      items: [
-        'Logo & Branding Design',
-        'Posters, Banners & Flyers',
-        'Visiting Card & Invitation Design',
-        'Certificate & ID Card Design',
-        'Photo Editing & Retouching',
-      ],
-    },
-    {
-      id: 'offset',
-      title: '🖨️ Offset Works',
-      items: [
-        'Book Printing',
-        'Wedding Card Printing',
-        'Invitation Card Printing',
-        'Certificate Printing',
-        'Letterhead Printing',
-        'Bulk Printing Solutions',
-      ],
-    },
-    {
-      id: 'digital',
-      title: '💻 Digital Works',
-      items: [
-        'Sticker Printing',
-        'Visiting Card Printing',
-        'ID Card (Plastic) Printing',
-        'Color & Black & White Printing (All Sizes)',
-        'Quick Print Services',
-      ],
-    },
-    {
-      id: 'sublimation',
-      title: '🔥 Sublimation Works',
-      items: ['Mug Printing', 'T-Shirt Printing', 'Customized Gift Items', 'Personalized Products', 'Promotional Items'],
-    },
-    {
-      id: 'photo',
-      title: '🖼️ Photo & Frame Works',
-      items: ['Photo Printing', 'Photo Framing', 'Custom Frame Designs', 'Photo Editing & Restoration'],
-    },
-  ]
-
-  const normalizedQuery = query.trim().toLowerCase()
-  const filtered = useMemo(() => {
-    if (!normalizedQuery) return categories
-    return categories
-      .map((cat) => ({
-        ...cat,
-        items: cat.items.filter((i) => i.toLowerCase().includes(normalizedQuery)),
-      }))
-      .filter((cat) => cat.items.length > 0)
-  }, [normalizedQuery])
+  const categories = useMemo(
+    () => [
+      {
+        id: 'graphic',
+        title: 'Graphic Works',
+        items: [
+          'Logo & Branding Design',
+          'Posters, Banners & Flyers',
+          'Visiting Card & Invitation Design',
+          'Certificate & ID Card Design',
+          'Photo Editing & Retouching',
+        ],
+      },
+      {
+        id: 'offset',
+        title: 'Offset Works',
+        items: [
+          'Book Printing',
+          'Wedding Card Printing',
+          'Invitation Card Printing',
+          'Certificate Printing',
+          'Letterhead Printing',
+          'Bulk Printing Solutions',
+        ],
+      },
+      {
+        id: 'digital',
+        title: 'Digital Works',
+        items: [
+          'Sticker Printing',
+          'Visiting Card Printing',
+          'ID Card (Plastic) Printing',
+          'Color & Black & White Printing (All Sizes)',
+          'Quick Print Services',
+        ],
+      },
+      {
+        id: 'sublimation',
+        title: 'Sublimation Works',
+        items: ['Mug Printing', 'T-Shirt Printing', 'Customized Gift Items', 'Personalized Products', 'Promotional Items'],
+      },
+      {
+        id: 'photo',
+        title: 'Photo & Frame Works',
+        items: ['Photo Printing', 'Photo Framing', 'Custom Frame Designs', 'Photo Editing & Restoration'],
+      },
+    ],
+    []
+  )
 
   return (
-    <main className="min-h-screen bg-white text-slate-800">
-      <header className="bg-gradient-to-r from-red-50 via-white to-white border-b border-zinc-100">
-        <div className="mx-auto max-w-screen-2xl px-6 py-14">
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-4">Our Services</h1>
-          <p className="text-xl md:text-2xl text-slate-600 max-w-2xl">
-            Professional print, design, photo and customization services. Explore our categories or search to find what you need.
+    <main className="min-h-screen bg-gray-50 text-slate-800 pt-24 md:pt-28">
+      {/* Hero (match Contact hero sizing) */}
+      <section className="relative bg-blue-900 text-white mx-5 sm:mx-8 lg:mx-12 mt-6 sm:mt-8 rounded-[2.5rem] sm:rounded-[3rem] md:rounded-[3.5rem] overflow-hidden px-4 pt-20 pb-20 min-h-[75vh] flex items-center">
+        <div className="max-w-[110rem] mx-auto text-center">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4">Our Services</h1>
+          <p className="text-lg sm:text-xl md:text-2xl text-blue-100/90 max-w-3xl mx-auto">
+            Explore our design, printing, photo and customization services.
           </p>
-
-          <div className="mt-6 max-w-lg">
-            <label htmlFor="service-search" className="sr-only">Search services</label>
-            <div className="relative">
-              <input
-                id="service-search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search services (e.g. 'Logo', 'Mug')"
-                className="w-full rounded-lg border border-zinc-200 px-4 py-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-red-300 text-base"
-                aria-label="Search services"
-              />
-              {query && (
-                <button
-                  onClick={() => setQuery('')}
-                  aria-label="Clear search"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-base text-slate-500 hover:text-slate-700"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-          </div>
         </div>
-      </header>
+      </section>
 
-      <section className="mx-auto max-w-screen-2xl px-6 py-12">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.length === 0 ? (
-            <div className="col-span-full rounded-lg border border-zinc-100 bg-red-50 p-8 text-center">
-              <p className="text-2xl font-semibold">No services found for "{query}".</p>
-              <p className="mt-3 text-base text-slate-600">Try a different keyword or clear the search.</p>
-            </div>
-          ) : (
-            filtered.map((cat) => (
-              <article key={cat.id} className="rounded-lg border border-zinc-100 bg-white p-8 shadow-sm hover:shadow-md transition">
-                <h2 className="text-[20px] md:text-2xl font-semibold mb-4">{cat.title}</h2>
-                <ul className="space-y-3 text-[16px] md:text-[18px] text-slate-700">
+      {/* Content */}
+      <section className="px-4 sm:px-6 lg:px-10 py-14">
+        <div className="mx-auto max-w-[110rem]">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {categories.map((cat) => (
+              <article
+                key={cat.id}
+                className="rounded-3xl border border-gray-100 bg-white p-8 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
+              >
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-5">{cat.title}</h2>
+
+                <ul className="space-y-3 text-base sm:text-lg md:text-xl text-slate-700 font-medium">
                   {cat.items.map((it) => (
                     <li key={it} className="flex items-start gap-3">
-                      <span className="mt-0.5 text-red-500 text-[18px]">▸</span>
+                      <span className="mt-1 text-red-500 font-bold">▸</span>
                       <span>{it}</span>
                     </li>
                   ))}
                 </ul>
               </article>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
 
-        <div className="mt-12 text-center text-base text-slate-500">
-          <p>Need a custom quote or have a large order? <a href="/contact" className="text-red-600 underline">Contact us</a>.</p>
+          {/* Modern CTA (hero-like) */}
+          <section className="mt-14">
+            <div className="relative bg-blue-900 text-white rounded-[2.5rem] sm:rounded-[3rem] md:rounded-[3.5rem] overflow-hidden px-10 sm:px-14 py-14 sm:py-16 md:py-20 shadow-xl ring-1 ring-white/10">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/20 pointer-events-none" />
+              <div className="relative flex flex-col lg:flex-row items-center justify-between gap-10">
+                <div className="text-center lg:text-left">
+                  <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
+                    Need a custom quote or a large order?
+                  </h3>
+                  <p className="mt-3 text-lg sm:text-xl md:text-2xl text-blue-100/90 font-medium max-w-2xl">
+                    Share quantity, size, material and finish — we’ll reply with pricing and timelines.
+                  </p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <a
+                    href="/contact"
+                    className="inline-flex items-center justify-center rounded-full bg-white px-10 py-5 text-lg sm:text-xl font-semibold text-blue-900 hover:bg-blue-50 shadow-lg transition-all"
+                  >
+                    Contact us
+                  </a>
+                  <a
+                    href="/shop"
+                    className="inline-flex items-center justify-center rounded-full bg-white/10 px-10 py-5 text-lg sm:text-xl font-semibold text-white hover:bg-white/15 ring-1 ring-white/25 transition-all"
+                  >
+                    Browse Shop
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </section>
     </main>
